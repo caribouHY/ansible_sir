@@ -128,3 +128,20 @@ class TestSirCommandModule(TestSirModule):
         commands = ["show system information", "show system information"]
         set_module_args(dict(commands=commands, wait_for=wait_for, match="all"))
         self.execute_module(failed=True)
+
+    def test_sir_command_configure_check_warning(self):
+        commands = ["configure"]
+        set_module_args({"commands": commands, "_ansible_check_mode": True})
+        result = self.execute_module()
+        self.assertEqual(
+            result["warnings"],
+            [
+                "Only show commands are supported when using check mode, not executing configure",
+            ],
+        )
+
+    def test_sir_command_configure_not_warning(self):
+        commands = ["configure"]
+        set_module_args(dict(commands=commands))
+        result = self.execute_module()
+        self.assertEqual(result["warnings"], [])
