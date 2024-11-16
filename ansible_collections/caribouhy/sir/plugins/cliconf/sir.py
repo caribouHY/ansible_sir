@@ -22,13 +22,13 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 authors:
-  - Yamaha Corporation
-cliconf: rtx
-short_description: Use rtx cliconf to run command on Yamaha RTX/NVR/FWX/vRX devices.
+  - CalibouHY
+cliconf: sir
+short_description: Use sir cliconf to run command on Si-R devices.
 description:
-  - This rtx plugin provides low level abstraction apis for
-    sending and receiving CLI commands from Yamaha RTX/NVR/FWX/vRX devices.
-version_added: "2.10"
+  - This sir plugin provides low level abstraction apis for
+    sending and receiving CLI commands from Si-R devices.
+version_added: "1.0.0"
 """
 
 import re
