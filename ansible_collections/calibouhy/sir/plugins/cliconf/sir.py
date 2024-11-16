@@ -81,7 +81,7 @@ class Cliconf(CliconfBase):
 
     def get_capabilities(self):
         result = super(Cliconf, self).get_capabilities()
-        result["rpc"] += ["get_diff"]
+        result["rpc"] += ["get_diff", "run_commands", "get_defaults_flag"]
         result["device_operations"] = self.get_device_operations()
         result.update(self.get_option_values())
         return json.dumps(result)
@@ -116,9 +116,9 @@ class Cliconf(CliconfBase):
         print("get otion value")
         return {
             "format": ["text"],
-            "diff_match": ["line", "none"],  #
+            "diff_match": ["line", "none"],
             "diff_replace": ["line", "block"],
-            "output": [],  #
+            "output": [],
         }
 
     def get_device_operations(self):
@@ -135,6 +135,9 @@ class Cliconf(CliconfBase):
             "supports_generate_diff": True,
             "supports_replace": False,
         }
+
+    def get_defaults_flag(self):
+        return "all"
 
     def commit(self, comment=None):
         if comment:
