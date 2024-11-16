@@ -3,7 +3,7 @@
 Si-RG/SR-Sシリーズ用のAnsibleモジュールです。
 
 ## 使い方
-`ansible_network_os: calibouhy.sir.sir`を設定してください。
+`ansible_network_os: caribouhy.sir.sir`を設定してください。
 
 ## 対応機種
 下記の機種でテストしています。
