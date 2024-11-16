@@ -1,3 +1,6 @@
+# A collection directory, resulting from the use of the pytest-ansible-units plugin
+collections/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
