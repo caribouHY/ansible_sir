@@ -8,10 +8,9 @@ description: Ansible collection for Si-R series
 license_file: "LICENSE"
 repository: https://github.com/caribouHY/ansible_sir
 issues: https://github.com/caribouHY/ansible_sir/issues
-tags: [si-r, networking]
+tags: [networking]
 dependencies:
   "ansible.netcommon": ">=6.1.0"
 build_ignore:
   - .vscode
-  - .github
-  - .gitignore
+  - tests
