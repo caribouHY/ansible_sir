@@ -21,7 +21,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-authors:
+author:
   - CaribouHY
 cliconf: sir
 short_description: Use sir cliconf to run command on Si-R devices.
