@@ -83,7 +83,7 @@ See the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/commun
 
 ## Release notes
 
-Release notes are available [here](https://github.com/alliedtelesis/ansible_awplus/blob/master/CHANGELOG.rst).
+Release notes are available [here](https://github.com/caribouHY/ansible_sir/blob/master/CHANGELOG.rst).
 
 ## Licensing
 
