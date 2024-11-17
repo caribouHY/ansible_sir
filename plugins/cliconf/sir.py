@@ -22,8 +22,8 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 author:
-  - CaribouHY
-cliconf: sir
+  - caribouHY(@caribouHY)
+name: sir
 short_description: Use sir cliconf to run command on Si-R devices.
 description:
   - This sir plugin provides low level abstraction apis for
@@ -32,15 +32,12 @@ version_added: "1.0.0"
 """
 
 import re
-import time
 import json
 
-from itertools import chain
 
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
     dumps,

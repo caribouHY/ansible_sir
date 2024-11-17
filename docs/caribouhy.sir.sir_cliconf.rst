@@ -36,7 +36,7 @@ Status
 Authors
 ~~~~~~~
 
-- CaribouHY
+- caribouHY(@caribouHY)
 
 
 .. hint::

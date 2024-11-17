@@ -22,7 +22,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 module: sir_command
-author: caribouHY
+author: caribouHY(@caribouHY)
 short_description: Module to run commands on Si-R devices.
 description:
   - Sends arbitrary commands to a Si-R device and returns the results read from the device.
