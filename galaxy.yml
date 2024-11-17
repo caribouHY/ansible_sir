@@ -1,0 +1,17 @@
+authors:
+  - caribouHY
+namespace: caribouhy
+name: sir
+version: 1.0.0
+readme: README.md
+description: Ansible collection for Si-R series
+license_file: "LICENSE"
+repository: https://github.com/caribouHY/ansible_sir
+issues: https://github.com/caribouHY/ansible_sir/issues
+tags: [si-r, networking]
+dependencies:
+  "ansible.netcommon": ">=6.1.0"
+build_ignore:
+  - .vscode
+  - .github
+  - .gitignore

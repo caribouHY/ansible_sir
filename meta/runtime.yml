@@ -1,0 +1,6 @@
+---
+requires_ansible: ">=2.17.6"
+plugin_routing:
+  modules:
+    command:
+      redirect: caribouhy.sir.sir_command

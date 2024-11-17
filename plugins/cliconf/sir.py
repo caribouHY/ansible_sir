@@ -21,26 +21,23 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-authors:
-  - Yamaha Corporation
-cliconf: rtx
-short_description: Use rtx cliconf to run command on Yamaha RTX/NVR/FWX/vRX devices.
+author:
+  - caribouHY(@caribouHY)
+name: sir
+short_description: Use sir cliconf to run command on Si-R devices.
 description:
-  - This rtx plugin provides low level abstraction apis for
-    sending and receiving CLI commands from Yamaha RTX/NVR/FWX/vRX devices.
-version_added: "2.10"
+  - This sir plugin provides low level abstraction apis for
+    sending and receiving CLI commands from Si-R devices.
+version_added: "1.0.0"
 """
 
 import re
-import time
 import json
 
-from itertools import chain
 
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
     dumps,
@@ -81,7 +78,7 @@ class Cliconf(CliconfBase):
 
     def get_capabilities(self):
         result = super(Cliconf, self).get_capabilities()
-        result["rpc"] += ["get_diff"]
+        result["rpc"] += ["get_diff", "run_commands", "get_defaults_flag"]
         result["device_operations"] = self.get_device_operations()
         result.update(self.get_option_values())
         return json.dumps(result)
@@ -116,9 +113,9 @@ class Cliconf(CliconfBase):
         print("get otion value")
         return {
             "format": ["text"],
-            "diff_match": ["line", "none"],  #
+            "diff_match": ["line", "none"],
             "diff_replace": ["line", "block"],
-            "output": [],  #
+            "output": [],
         }
 
     def get_device_operations(self):
@@ -135,6 +132,9 @@ class Cliconf(CliconfBase):
             "supports_generate_diff": True,
             "supports_replace": False,
         }
+
+    def get_defaults_flag(self):
+        return "all"
 
     def commit(self, comment=None):
         if comment:
