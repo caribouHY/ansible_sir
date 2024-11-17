@@ -1,0 +1,8 @@
+ansible-lint
+black==24.10.0
+flake8
+
+# Unit test runner
+pytest-ansible
+pytest-xdist
+pytest-cov
