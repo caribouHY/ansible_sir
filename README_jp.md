@@ -43,4 +43,4 @@ Si-Rに下記の設定がされている場合は正常に動作しません。
 
 ## Licence
 ### GPL V3
-See the [LICENSE](ansible_collections/caribouhy/sir/LICENSE) file.
+See the [LICENSE](LICENSE) file.

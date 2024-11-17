@@ -2,6 +2,8 @@
 
 The Ansible Cisco IOS collection includes a variety of Ansible content to help automate the management of Fasa Technologies Si-R series.
 
+日本語版ドキュメントは[こちら](https://github.com/caribouHY/ansible_sir/blob/develop/README_jp.md)
+
 ## Version compatibility
 
 This collection has been tested against Si-R G120 >= V20.54
