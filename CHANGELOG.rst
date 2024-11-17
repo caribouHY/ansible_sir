@@ -18,4 +18,4 @@ Cliconf
 New Modules
 -----------
 
-- rir_command - Module to run commands on Si-R devices.
+- sir_command - Module to run commands on Si-R devices.
