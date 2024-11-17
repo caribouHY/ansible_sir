@@ -39,22 +39,28 @@ You can install the Si-R collection with the Ansible Galaxy CLI:
 
 This collection includes [network resource modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html).
 
-### Using modules from the Allied Telesis AlliedWare Plus collection in your playbooks
-
-You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `alliedtelesis.awplus.awplus_l2_interfaces`.
-
-The following task replaces configuration changes in the running configuration on an Allied Telesis AW+ network device, using the FQCN:
-
+### Sample Playbook
 ```yaml
 ---
-  - name: Replace device configuration of specified L2 interfaces with provided configuration.
-    alliedtelesis.awplus.awplus_l2_interfaces:
-      config:
-        - name: port1.0.1
-          trunk:
-            allowed_vlans: 20-25,40
-            native_vlan: 20
-      state: replaced
+- name: Sample Playbook
+  hosts: sir
+  connection: network_cli
+
+  tasks:
+    - name: Run show system information
+      caribouhy.sir.sir_command:
+        commands:
+          - show system information
+      register: result
+
+    - name: Debug
+      ansible.builtin.debug:
+        msg: "{{ result.stdout_lines[0] }}"
+
+  vars:
+    ansible_network_os: caribouhy.sir.sir
+    ansible_user: admin
+    ansible_ssh_pass: admin
 ```
 
 <!--start requires_ansible-->
@@ -71,7 +77,7 @@ PEP440 is the schema used to describe the versions of Ansible.
 
 ## Contributing to this collection
 
-We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Allied Telesis AlliedWare Plus collection repository](https://github.com/alliedtelesis/ansible_awplus). See [Contributing to Ansible-maintained collections](https://docs.ansible.com/ansible/devel/community/contributing_maintained_collections.html#contributing-maintained-collections) for complete details.
+We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Si-R collection repository](https://github.com/caribouHY/ansible_sir). See [Contributing to Ansible-maintained collections](https://docs.ansible.com/ansible/devel/community/contributing_maintained_collections.html#contributing-maintained-collections) for complete details.
 
 See the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html) for details on contributing to Ansible.
 
