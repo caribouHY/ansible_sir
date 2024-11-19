@@ -4,6 +4,14 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
+Unreleased
+======
+
+Bugfixes
+--------
+
+- terminal - support teminal timestamp and fix become
+
 v1.0.0
 ======
 
