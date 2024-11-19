@@ -1,0 +1,8 @@
+---
+- name: Ensure required interfaces are present in running-config
+  vars:
+    lines: |-
+      lan 19 description test_for_ansible
+  register: result
+  ansible.netcommon.cli_config:
+    config: "{{ lines }}"

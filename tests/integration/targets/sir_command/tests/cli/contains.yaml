@@ -1,0 +1,19 @@
+---
+- ansible.builtin.debug: msg="START cli/contains.yaml on connection={{ ansible_connection }}"
+
+- name: Test contains operator
+  register: result
+  caribouhy.sir.sir_command:
+    commands:
+      - show system information
+      - show interface interface lan19
+    wait_for:
+      - result[0] contains Si-R
+      - result[1] contains lan19
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == false
+      - result.stdout is defined
+
+- ansible.builtin.debug: msg="END cli/contains.yaml on connection={{ ansible_connection }}"
