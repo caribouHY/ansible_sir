@@ -7,6 +7,7 @@ Si-Rシリーズ用のAnsibleモジュールです。
 モジュール名 | 説明
 --- | ---
 [caribouhy.sir.sir_command](docs/caribouhy.sir.sir_command_module.rst)|Si-R上で運用管理コマンドを実行します。
+[caribouhy.sir.sir_config](docs/caribouhy.sir.sir_config_module.rst)|構成定義コマンドの実行およびコンフィグの管理を行います。
 
 ## Sample Playbook
 ```yaml

@@ -23,6 +23,7 @@ Name | Description
 Name | Description
 --- | ---
 [caribouhy.sir.sir_command](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_command_module.rst)|Module to run commands on Si-R devices.
+[caribouhy.sir.sir_config](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_config_module.rst)|Module to manage configuration sections.
 
 <!--end collection content-->
 

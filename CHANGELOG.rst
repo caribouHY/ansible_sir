@@ -7,6 +7,11 @@ Si-R Collection Release Notes
 Unreleased
 ======
 
+New Modules
+-----------
+
+- sir_config - Module to manage configuration sections.
+
 Bugfixes
 --------
 
