@@ -250,8 +250,9 @@ from ansible_collections.caribouhy.sir.plugins.module_utils.network.sir.sir impo
 
 
 def get_candidate_config(module):
-    candidate = ""
+    candidate = module.params["src"] or module.params["lines"]
     if module.params["src"]:
+        # TODO: support src include indnet
         candidate = module.params["src"]
     elif module.params["lines"]:
         candidate_obj = NetworkConfig(indent=1)
@@ -326,7 +327,10 @@ def main():
         running = get_running_config(module, contents, flags=flags)
         try:
             response = connection.get_diff(
-                candidate=candidate, running=running, diff_match=match, diff_ignore_lines=diff_ignore_lines
+                candidate=candidate,
+                running=running,
+                diff_match=match,
+                diff_ignore_lines=diff_ignore_lines,
             )
         except ConnectionError as exc:
             module.fail_json(msg=to_text(exc, errors="surrogate_then_replace"))

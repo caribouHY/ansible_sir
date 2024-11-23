@@ -61,9 +61,7 @@ class Cliconf(CliconfBase):
         if format:
             option_values = self.get_option_values()
             if format not in option_values["format"]:
-                raise ValueError(
-                    f"'format' value {format} is not supported for get_config"
-                )
+                raise ValueError(f"'format' value {format} is not supported for get_config")
 
         if not flags:
             flags = []
@@ -196,14 +194,12 @@ class Cliconf(CliconfBase):
             )
 
         # prepare candidate configuration
-        candidate_obj = NetworkConfig(indent=1)
+        candidate_obj = NetworkConfig(indent=0)
         candidate_obj.load(candidate)
 
         if running and diff_match != "none":
             # running configuration
-            running_obj = NetworkConfig(
-                indent=1, contents=running, ignore_lines=diff_ignore_lines
-            )
+            running_obj = NetworkConfig(indent=1, contents=running, ignore_lines=diff_ignore_lines)
             configdiffobjs = candidate_obj.difference(
                 running_obj,
                 path=path,
@@ -214,18 +210,14 @@ class Cliconf(CliconfBase):
         else:
             configdiffobjs = candidate_obj.items
 
-        diff["config_diff"] = (
-            dumps(configdiffobjs, "commands") if configdiffobjs else ""
-        )
+        diff["config_diff"] = dumps(configdiffobjs, "commands") if configdiffobjs else ""
         return diff
 
     @enable_mode
     def edit_config(self, candidate=None, commit=True, replace=None, comment=None):
         resp = {}
         operations = self.get_device_operations()
-        self.check_edit_config_capability(
-            operations, candidate, commit, replace, comment
-        )
+        self.check_edit_config_capability(operations, candidate, commit, replace, comment)
 
         results = []
         requests = []
@@ -263,9 +255,7 @@ class Cliconf(CliconfBase):
 
             output = cmd.pop("output", None)
             if output:
-                raise ValueError(
-                    f"'output' value {output} is not supported for run_commands"
-                )
+                raise ValueError(f"'output' value {output} is not supported for run_commands")
 
             try:
                 out = self.send_command(**cmd)
