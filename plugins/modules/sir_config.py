@@ -256,6 +256,7 @@ def get_candidate_config(module):
         candidate = module.params["src"]
     elif module.params["lines"]:
         candidate_obj = NetworkConfig(indent=1)
+        candidate_obj.add(module.params["lines"])
         candidate = dumps(candidate_obj, "raw")
     return candidate
 
@@ -272,7 +273,7 @@ def get_running_config(module, current_config=None, flags=None):
 
 def save_config(module, result):
     result["changed"] = True
-    run_commands(module, commands=["save"])
+    run_commands(module, commands=["configure", "save", "exit"])
 
 
 def main():
@@ -319,7 +320,8 @@ def main():
     if module.params["backup"] or (module._diff and module.params["diff_against"] == "running"):
         contents = get_config(module, flags=flags)
         config = NetworkConfig(contents=contents)
-        result["__backup__"] = contents
+        if module.params["backup"]:
+            result["__backup__"] = contents
 
     if any((module.params["src"], module.params["lines"])):
         match = module.params["match"]
