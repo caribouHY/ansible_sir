@@ -194,12 +194,15 @@ class Cliconf(CliconfBase):
             )
 
         # prepare candidate configuration
+        if len(candidate) > 0:
+            commands = [line.strip() for line in candidate.splitlines() if len(line.strip()) > 0]
+            candidate = "\n".join(commands)
         candidate_obj = NetworkConfig(indent=0)
         candidate_obj.load(candidate)
 
         if running and diff_match != "none":
             # running configuration
-            running_obj = NetworkConfig(indent=1, contents=running, ignore_lines=diff_ignore_lines)
+            running_obj = NetworkConfig(indent=0, contents=running, ignore_lines=diff_ignore_lines)
             configdiffobjs = candidate_obj.difference(
                 running_obj,
                 path=path,

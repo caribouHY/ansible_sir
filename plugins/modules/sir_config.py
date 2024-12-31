@@ -250,12 +250,14 @@ from ansible_collections.caribouhy.sir.plugins.module_utils.network.sir.sir impo
 
 
 def get_candidate_config(module):
-    candidate = module.params["src"] or module.params["lines"]
+    candidate = ""
     if module.params["src"]:
-        # TODO: support src include indnet
-        candidate = module.params["src"]
+        commands = module.params["src"].splitlines()
+        if len(commands) > 0:
+            commands = [line.strip() for line in commands if len(line.strip()) > 0]
+        candidate = "\n".join(commands)
     elif module.params["lines"]:
-        candidate_obj = NetworkConfig(indent=1)
+        candidate_obj = NetworkConfig(indent=0)
         candidate_obj.add(module.params["lines"])
         candidate = dumps(candidate_obj, "raw")
     return candidate

@@ -25,6 +25,15 @@
     that:
       - result.changed == false
 
+- name: Check device with configuration include white spaces
+  register: result
+  caribouhy.sir.sir_config:
+    src: config_host2.j2
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == false
+
 - name: Configure device with configuration not check
   register: result
   caribouhy.sir.sir_config:
