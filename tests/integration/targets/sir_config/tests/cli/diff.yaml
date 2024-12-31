@@ -1,0 +1,37 @@
+---
+- ansible.builtin.debug: msg="START cli/diff.yaml on connection={{ ansible_connection }}"
+
+- name: Setup
+  caribouhy.sir.sir_config:
+    commands:
+      - delete host
+      - host 5 name sir-01.ansible.example.com
+      - host 5 ip address 127.0.0.1
+    match: none
+
+- name: Config diff against retrieved configuration
+  diff: true
+  register: result
+  caribouhy.sir.sir_config:
+    diff_against: intended
+    intended_config: "{{ lookup('file', '{{ role_path }}/templates/intended_running_config') }}"
+
+- ansible.builtin.assert:
+    that:
+      - "'host 5 name sir-02.ansible.example.com' in result['diff']['after']"
+      # - "'host 5 name sir-01.ansible.example.com' in result['diff']['before']"
+
+- name: Config diff against provided running_config
+  diff: true
+  register: result
+  caribouhy.sir.sir_config:
+    diff_against: intended
+    intended_config: "{{ lookup('file', '{{ role_path }}/templates/intended_running_config') }}"
+    running_config: "{{ lookup('file', '{{ role_path }}/templates/base_running_config') }}"
+
+- ansible.builtin.assert:
+    that:
+      - "'host 5 name sir-02.ansible.example.com' in result['diff']['after']"
+      - "'host 5 name sir-01.ansible.example.com' in result['diff']['before']"
+
+- ansible.builtin.debug: msg="END cli/diff.yaml on connection={{ ansible_connection }}"

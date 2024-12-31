@@ -1,0 +1,42 @@
+---
+- ansible.builtin.debug: msg="START cli/defaults.yaml on connection={{ ansible_connection }}"
+
+- name: Setup
+  caribouhy.sir.sir_config:
+    commands:
+      - delete serverinfo
+    match: none
+  register: result
+
+- ansible.builtin.debug: var=result
+
+- name: Configure device with defaults included
+  register: result
+  caribouhy.sir.sir_config:
+    commands:
+      - serverinfo http ip on
+      - serverinfo http ipv6 off
+    defaults: true
+
+- ansible.builtin.debug: var=result
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == true
+
+- name: Check device with defaults included
+  register: result
+  caribouhy.sir.sir_config:
+    lines:
+      - serverinfo http ip on
+      - serverinfo http ipv6 off
+    defaults: true
+
+- ansible.builtin.debug: var=result
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == false
+      - result.updates is not defined
+
+- ansible.builtin.debug: msg="END cli/defaults.yaml on connection={{ ansible_connection }}"

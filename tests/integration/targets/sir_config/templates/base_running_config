@@ -1,0 +1,2 @@
+host 5 name sir-01.ansible.example.com
+host 5 ip address 127.0.0.1
