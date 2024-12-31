@@ -1,0 +1,51 @@
+---
+- ansible.builtin.debug: msg="START cli/ping.yaml on connection={{ ansible_connection }}"
+
+- name: Setup
+  caribouhy.sir.sir_config:
+    commands:
+      - delete lan 7
+      - delete internal-path 7
+      - ether 2 4 vlan tag 4007
+      - lan 7 ip address 10.255.255.1/24 3
+      - lan 7 vlan 4007
+      - internal-path interlocking on
+      - internal-path 7 vlan 4007
+      - internal-path 7 ip address 10.255.255.2/24 3
+    match: none
+
+- name: Expected successful ping
+  register: esp
+  caribouhy.sir.sir_ping:
+    dest: 10.255.255.2
+
+- name: Expected successful ping with size
+  register: esp
+  caribouhy.sir.sir_ping:
+    dest: 10.255.255.2
+    size: 500
+
+- name: Unexpected unsuccessful ping
+  register: uup
+  ignore_errors: true
+  caribouhy.sir.sir_ping:
+    dest: 10.255.255.250
+
+- name: Unexpected successful ping
+  register: usp
+  ignore_errors: true
+  caribouhy.sir.sir_ping:
+    dest: 10.255.255.2
+    state: absent
+
+- name: Expected unsuccessful ping
+  register: eup
+  caribouhy.sir.sir_ping:
+    dest: 10.255.255.250
+    state: absent
+
+- name: Assert
+  ansible.builtin.assert:
+    that:
+      - esp.failed == eup.failed == false
+      - usp.failed == uup.failed == true

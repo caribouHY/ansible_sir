@@ -24,6 +24,7 @@ Name | Description
 --- | ---
 [caribouhy.sir.sir_command](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_command_module.rst)|Module to run commands on Si-R devices.
 [caribouhy.sir.sir_config](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_config_module.rst)|Module to manage configuration sections.
+[caribouhy.sir.sir_ping](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_ping_module.rst)|Tests reachability using ping from Si-R router.
 
 <!--end collection content-->
 
