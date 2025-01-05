@@ -44,12 +44,14 @@ class TerminalModule(TerminalBase):
 
     def on_open_shell(self):
         try:
+            self._exec_cli_command(b"terminal timestamp disable")
             self._exec_cli_command(b"terminal pager disable")
+            self._exec_cli_command(b"terminal window column 512")
         except AnsibleConnectionFailure:
             raise AnsibleConnectionFailure("unable to set terminal parameters")
 
     def on_become(self, passwd=None):
-        if self._get_prompt().endswith(b"#"):
+        if self._get_prompt().strip().endswith(b"#"):
             return
 
         cmd = {"command": "admin"}
@@ -74,7 +76,7 @@ class TerminalModule(TerminalBase):
             )
 
     def on_unbecome(self):
-        prompt = self._get_prompt()
+        prompt = self._get_prompt().strip()
         if prompt is None:
             # if prompt is None most likely the terminal is hung up at a prompt
             return

@@ -1,0 +1,86 @@
+---
+- ansible.builtin.debug: msg="START cli/src.yaml on connection={{ ansible_connection }}"
+
+- name: Setup
+  caribouhy.sir.sir_config:
+    commands:
+      - delete host
+    match: none
+
+- name: Configure device with configuration
+  register: result
+  caribouhy.sir.sir_config:
+    src: config_host.j2
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == true
+
+- name: Check device with configuration
+  register: result
+  caribouhy.sir.sir_config:
+    src: config_host.j2
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == false
+
+- name: Check device with configuration include white spaces
+  register: result
+  caribouhy.sir.sir_config:
+    src: config_host2.j2
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == false
+
+- name: Configure device with configuration not check
+  register: result
+  caribouhy.sir.sir_config:
+    src: config_host.j2
+    match: none
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == true
+
+- name: Configure with invalid src
+  register: result
+  ignore_errors: true
+  caribouhy.sir.sir_config:
+    src: foobar.j2
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == false
+      - result.failed == true
+      - result.msg == 'path specified in src not found'
+
+- name: Check for empty diff
+  check_mode: true
+  register: result
+  caribouhy.sir.sir_config:
+    running_config: "serverinfo http ip off\nserverinfo http ipv6 off\n"
+    lines:
+      - serverinfo http ip off
+      - serverinfo http ipv6 off
+
+- ansible.builtin.assert:
+    that:
+      - result.updates is undefined
+
+- name: Check for diff with ignore lines for running configuration
+  check_mode: true
+  register: result
+  caribouhy.sir.sir_config:
+    running_config: "serverinfo http ip off\nserverinfo http ipv6 off\n"
+    lines:
+      - serverinfo http ip off
+      - serverinfo http ipv6 off
+    diff_ignore_lines: serverinfo http ipv6 off
+
+- ansible.builtin.assert:
+    that:
+      - "'serverinfo http ipv6 off' in result.updates"
+
+- ansible.builtin.debug: msg="END cli/src.yaml on connection={{ ansible_connection }}"

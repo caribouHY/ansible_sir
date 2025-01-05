@@ -4,3 +4,7 @@ plugin_routing:
   modules:
     command:
       redirect: caribouhy.sir.sir_command
+    config:
+      redirect: caribouhy.sir.sir_config
+    ping:
+      redirect: caribouhy.sir.sir_ping

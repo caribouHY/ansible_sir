@@ -1,0 +1,47 @@
+---
+- ansible.builtin.debug: msg="START cli/save.yaml on connection={{ ansible_connection }}"
+
+- name: Setup
+  caribouhy.sir.sir_config:
+    commands:
+      - delete host
+      - host 5 name save.config.example.com
+    match: none
+    save_when: modified
+
+- name: Save should always run
+  register: result
+  caribouhy.sir.sir_config:
+    save_when: always
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == true
+
+- name: Delete configuration (setup)
+  register: result
+  caribouhy.sir.sir_config:
+    lines:
+      - delete host 5
+    save_when: modified
+
+- name: Save should run when changed
+  register: result
+  caribouhy.sir.sir_config:
+    lines:
+      - host 5 name save.config.example.com
+    save_when: modified
+
+- ansible.builtin.assert:
+    that:
+      - result.changed == true
+
+- name: Teardown
+  register: result
+  caribouhy.sir.sir_config:
+    lines:
+      - delete host 5
+    match: none
+    save_when: always
+
+- ansible.builtin.debug: msg="END cli/save.yaml on connection={{ ansible_connection }}"

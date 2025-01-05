@@ -1,6 +1,6 @@
 # Ansible Collection for Si-R series
 
-The Ansible Cisco IOS collection includes a variety of Ansible content to help automate the management of Fasa Technologies Si-R series.
+The Ansible Si-R collection includes a variety of Ansible content to help automate the management of Fasa Technologies Si-R series.
 
 日本語版ドキュメントは[こちら](https://github.com/caribouHY/ansible_sir/blob/develop/README_jp.md)
 
@@ -23,6 +23,8 @@ Name | Description
 Name | Description
 --- | ---
 [caribouhy.sir.sir_command](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_command_module.rst)|Module to run commands on Si-R devices.
+[caribouhy.sir.sir_config](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_config_module.rst)|Module to manage configuration sections.
+[caribouhy.sir.sir_ping](https://github.com/caribouHY/ansible_sir/blob/main/docs/caribouhy.sir.sir_ping_module.rst)|Tests reachability using ping from Si-R router.
 
 <!--end collection content-->
 

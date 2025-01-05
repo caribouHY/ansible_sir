@@ -1,0 +1,8 @@
+---
+- name: Main task for command module
+  ansible.builtin.include_tasks: cli.yaml
+
+- name: Run cli_config tests
+  ansible.builtin.include_tasks: cli_config.yaml
+  tags:
+    - network_cli
