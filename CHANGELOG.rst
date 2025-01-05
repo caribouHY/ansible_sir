@@ -4,18 +4,19 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
-Unreleased
+v1.1.0
 ======
 
 New Modules
 -----------
 
 - sir_config - Module to manage configuration sections.
+- sir_ping - Tests reachability using ping from Si-R router.
 
 Bugfixes
 --------
 
-- terminal - support teminal timestamp and fix become
+- terminal - support teminal timestamp and fix become.
 
 v1.0.0
 ======
