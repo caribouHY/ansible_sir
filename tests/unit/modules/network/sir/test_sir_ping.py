@@ -21,7 +21,7 @@ class TestSirPingModule(TestSirModule):
     def setUp(self):
         super(TestSirPingModule, self).setUp()
         self.mock_execute_show_command = patch(
-            "ansible_collections.caribouhy.sir.plugins.module_utils.network.sir.config.ping.ping.Ping.run_command",
+            "ansible_collections.caribouhy.sir.plugins.modules.sir_ping.run_commands",
         )
         self.execute_show_command = self.mock_execute_show_command.start()
 

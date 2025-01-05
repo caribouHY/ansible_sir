@@ -115,9 +115,77 @@ rtt:
   sample: {"avg": 2, "max": 8, "min": 1}
 """
 
+import re
+
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.caribouhy.sir.plugins.module_utils.network.sir.config.ping.ping import Ping
+from ansible_collections.caribouhy.sir.plugins.module_utils.network.sir.sir import run_commands
+from ansible_collections.caribouhy.sir.plugins.module_utils.network.sir.ulits.utils import (
+    is_valid_ip,
+)
+
+
+def generate_command(
+    dest, count, afi=None, df_bit=None, source=None, size=None, timeout=None, ttl=None
+):
+    """
+    Genetate ping command
+    """
+    cmd = f"ping {dest}"
+
+    if is_valid_ip(dest) is False and afi:
+        if afi == "ip":
+            cmd += " v4"
+        elif afi == "ipv6":
+            cmd += " v6"
+
+    if source:
+        cmd += f" source {source}"
+
+    cmd += f" repeat {count}"
+
+    if size:
+        cmd += f" size {size}"
+
+    if ttl:
+        cmd += f" ttl {ttl}"
+
+    if timeout:
+        cmd += f" timeout {timeout}"
+
+    if df_bit:
+        cmd += " df"
+
+    return cmd
+
+
+def parse_rate(rate_info):
+    rate_re = re.compile(
+        r"(?P<tx>\d+) packets transmitted, (?P<rx>\d+) packets received, (?P<pkt_loss>\d+)% packet loss",
+    )
+
+    rate = rate_re.match(rate_info)
+    return rate.group("pkt_loss"), rate.group("rx"), rate.group("tx")
+
+
+def parse_rtt(rtt_info):
+    rtt_re = re.compile(
+        r"round-trip \(ms\)  min/ave/max = (?P<min>\d*).(?:\d*)/(?P<avg>\d*).(?:\d*)/(?P<max>\d+).(?:\d*)",
+    )
+    rtt = rtt_re.match(rtt_info)
+
+    return rtt.groupdict()
+
+
+def validate_results(module, loss, results):
+    """
+    This function is used to validate whether the ping results were unexpected per "state" param.
+    """
+    state = module.params["state"]
+    if state == "present" and loss == 100:
+        module.fail_json(msg="Ping failed unexpectedly", **results)
+    elif state == "absent" and loss < 100:
+        module.fail_json(msg="Ping succeeded unexpectedly", **results)
 
 
 def main():
@@ -139,8 +207,58 @@ def main():
     )
     module = AnsibleModule(argument_spec=argument_spec)
 
-    result = Ping(module).execute_module()
-    module.exit_json(**result)
+    count = module.params["count"]
+    afi = module.params["afi"]
+    dest = module.params["dest"]
+    df_bit = module.params["df_bit"]
+    source = module.params["source"]
+    size = module.params["size"]
+    timeout = module.params["timeout"]
+    ttl = module.params["ttl"]
+
+    warnings = list()
+
+    results = {}
+    if warnings:
+        results["warnings"] = warnings
+
+    results["commands"] = generate_command(
+        dest=dest,
+        count=count,
+        afi=afi,
+        df_bit=df_bit,
+        source=source,
+        size=size,
+        timeout=timeout,
+        ttl=ttl,
+    )
+    ping_results = run_commands(module, commands=results["commands"])
+
+    if isinstance(ping_results, list):
+        ping_results = ping_results[0]
+
+    ping_results_list = ping_results.splitlines()
+    rtt_info, rate_info = None, None
+    for line in ping_results_list:
+        if line.startswith("round-trip"):
+            rtt_info = line
+        if line.startswith(f"{count} packets transmitted"):
+            rate_info = line
+
+    if rtt_info:
+        rtt = parse_rtt(rtt_info)
+        for k, v in rtt.items():
+            if rtt[k] is not None:
+                rtt[k] = int(v)
+        results["rtt"] = rtt
+
+    pkt_loss, rx, tx = parse_rate(rate_info)
+    results["packet_loss"] = str(pkt_loss) + "%"
+    results["packets_rx"] = int(rx)
+    results["packets_tx"] = int(tx)
+    validate_results(module, int(pkt_loss), results)
+
+    module.exit_json(**results)
 
 
 if __name__ == "__main__":
