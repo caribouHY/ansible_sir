@@ -93,6 +93,13 @@ class TestSirConfigModule(TestSirModule):
         set_module_args(dict(backup=True))
         result = self.execute_module()
         self.assertIn("__backup__", result)
+        self.assertEqual(result["__backup__"].endswith("\neof"), False)
+
+    def test_sir_config_backup_eof(self):
+        set_module_args(dict(backup=True, backup_options=dict(append_eof=True)))
+        result = self.execute_module()
+        self.assertIn("__backup__", result)
+        self.assertEqual(result["__backup__"].endswith("\neof"), True)
 
     def test_sir_config_save_changed_true(self):
         src = load_fixture("sir_config_src.cfg")

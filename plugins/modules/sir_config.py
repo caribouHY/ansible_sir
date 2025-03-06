@@ -171,6 +171,11 @@ options:
         path. The value of this option is read only when C(backup) is set to I(yes),
         if C(backup) is set to I(no) this option will be silently ignored.
     suboptions:
+      append_eof:
+        description:
+          - If there is no `eof` at the end of the backup configuration, `eof` will be appended to the end.
+        type: bool
+        default: false
       filename:
         description:
           - The filename to be used to store the backup configuration. If the filename
@@ -280,7 +285,9 @@ def save_config(module, result):
 
 def main():
     """main entry point for module execution"""
-    backup_spec = dict(filename=dict(), dir_path=dict(type="path"))
+    backup_spec = dict(
+        filename=dict(), dir_path=dict(type="path"), append_eof=dict(type="bool", default=False)
+    )
     argument_spec = dict(
         src=dict(type="path"),
         lines=dict(aliases=["commands"], type="list", elements="str"),
@@ -324,6 +331,10 @@ def main():
         config = NetworkConfig(contents=contents)
         if module.params["backup"]:
             result["__backup__"] = contents
+            if module.params["backup_options"]:
+                if module.params["backup_options"]["append_eof"]:
+                    if not contents.endswith("\neof"):
+                        result["__backup__"] += "\neof"
 
     if any((module.params["src"], module.params["lines"])):
         match = module.params["match"]

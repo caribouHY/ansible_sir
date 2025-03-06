@@ -4,6 +4,14 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
+Unreleased
+======
+
+Minor Changes
+-------------
+
+- sir_config - Add support for append `eof` to the end of backup configuration.
+
 v1.1.0
 ======
 
