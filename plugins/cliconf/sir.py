@@ -112,13 +112,13 @@ class Cliconf(CliconfBase):
         return {
             "format": ["text"],
             "diff_match": ["line", "none"],
-            "diff_replace": ["line", "block"],
+            "diff_replace": [],
             "output": [],
         }
 
     def get_device_operations(self):
         return {
-            "supports_diff_replace": True,
+            "supports_diff_replace": False,
             "supports_commit": True,
             "supports_rollback": False,
             "supports_defaults": True,
@@ -172,7 +172,7 @@ class Cliconf(CliconfBase):
         diff_match="line",
         diff_ignore_lines=None,
         path=None,
-        diff_replace="line",
+        diff_replace=None,
     ):
         diff = {}
         device_operations = self.get_device_operations()
@@ -187,11 +187,11 @@ class Cliconf(CliconfBase):
                 % (diff_match, ", ".join(option_values["diff_match"])),
             )
 
-        if diff_replace not in option_values["diff_replace"]:
-            raise ValueError(
-                "'replace' value %s in invalid, valid values are %s"
-                % (diff_replace, ", ".join(option_values["diff_replace"])),
-            )
+        if diff_replace is not None:
+            raise ValueError("'replace' in diff is not supported")
+
+        if diff_ignore_lines is not None:
+            raise ValueError("'diff_ignore_lines' in diff is not supported")
 
         # prepare candidate configuration
         if len(candidate) > 0:
