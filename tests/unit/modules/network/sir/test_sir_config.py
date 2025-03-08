@@ -89,6 +89,13 @@ class TestSirConfigModule(TestSirModule):
         commands = ["ether 1 1 description foo", "ether 2 1 vlan untag 3", "delete time auto"]
         self.execute_module(changed=True, commands=commands)
 
+    def test_sir_config_commit_timer(self):
+        src = load_fixture("sir_config_src.cfg")
+        set_module_args(dict(src=src, commit_timer=40))
+        self.execute_module(changed=True)
+        args = self.load_config.call_args[1]["commit_timer"]
+        self.assertEqual(args, 40)
+
     def test_sir_config_backup(self):
         set_module_args(dict(backup=True))
         result = self.execute_module()

@@ -134,10 +134,16 @@ class Cliconf(CliconfBase):
     def get_defaults_flag(self):
         return "all"
 
-    def commit(self, comment=None):
+    def commit(self, comment=None, commit_timer=None):
+        command = "commit"
+
         if comment:
             raise ValueError("commit coment is not supported")
-        self.send_command("commit")
+
+        if commit_timer:
+            command += f" try time {commit_timer}m"
+
+        self.send_command(command)
 
     def discard_changes(self):
         self.send_command("discard")
@@ -217,7 +223,9 @@ class Cliconf(CliconfBase):
         return diff
 
     @enable_mode
-    def edit_config(self, candidate=None, commit=True, replace=None, comment=None):
+    def edit_config(
+        self, candidate=None, commit=True, replace=None, diff=False, comment=None, commit_timer=None
+    ):
         resp = {}
         operations = self.get_device_operations()
         self.check_edit_config_capability(operations, candidate, commit, replace, comment)
@@ -236,7 +244,7 @@ class Cliconf(CliconfBase):
                 requests.append(cmd)
         if commit:
             try:
-                self.commit()
+                self.commit(commit_timer=commit_timer)
             except AnsibleConnectionFailure as e:
                 msg = "commit failed: %s" % e.message
                 self.discard_changes()

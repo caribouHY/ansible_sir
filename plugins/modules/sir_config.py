@@ -90,6 +90,13 @@ options:
         role. If the directory does not exist, it is created.
     type: bool
     default: false
+  commit_timer:
+    description:
+      - The argument will configure a time out value in minutes for the commit to be confirmed
+        before it is automatically rolled back. If the value for this argument is set to 0,
+        the commit is confirmed immediately which is also the default behaviour.
+    type: int
+    default: 0
   running_config:
     description:
       - The module, by default, will connect to the remote device and retrieve the current
@@ -302,6 +309,7 @@ def main():
         save_when=dict(choices=["always", "never", "modified", "changed"], default="never"),
         diff_against=dict(choices=["startup", "intended", "running"]),
         diff_ignore_lines=dict(type="list", elements="str"),
+        commit_timer=dict(type="int", default=0),
     )
 
     mutually_exclusive = [("lines", "src")]
@@ -363,7 +371,10 @@ def main():
             # them with the current running config
             if not module.check_mode:
                 if commands:
-                    load_config(module, commands, commit=True)
+                    commit_timer = (
+                        module.params["commit_timer"] if module.params["commit_timer"] > 0 else None
+                    )
+                    load_config(module, commands, commit=True, commit_timer=commit_timer)
             result["changed"] = True
 
     running_config = module.params["running_config"]
