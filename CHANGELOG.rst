@@ -4,7 +4,7 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
-Unreleased
+v1.2.0
 ======
 
 Minor Changes
