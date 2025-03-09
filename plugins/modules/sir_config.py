@@ -90,6 +90,13 @@ options:
         role. If the directory does not exist, it is created.
     type: bool
     default: false
+  commit_timer:
+    description:
+      - The argument will configure a time out value in minutes for the commit to be confirmed
+        before it is automatically rolled back. If the value for this argument is set to 0,
+        the commit is confirmed immediately which is also the default behaviour.
+    type: int
+    default: 0
   running_config:
     description:
       - The module, by default, will connect to the remote device and retrieve the current
@@ -171,6 +178,11 @@ options:
         path. The value of this option is read only when C(backup) is set to I(yes),
         if C(backup) is set to I(no) this option will be silently ignored.
     suboptions:
+      append_eof:
+        description:
+          - If there is no `eof` at the end of the backup configuration, `eof` will be appended to the end.
+        type: bool
+        default: false
       filename:
         description:
           - The filename to be used to store the backup configuration. If the filename
@@ -280,7 +292,9 @@ def save_config(module, result):
 
 def main():
     """main entry point for module execution"""
-    backup_spec = dict(filename=dict(), dir_path=dict(type="path"))
+    backup_spec = dict(
+        filename=dict(), dir_path=dict(type="path"), append_eof=dict(type="bool", default=False)
+    )
     argument_spec = dict(
         src=dict(type="path"),
         lines=dict(aliases=["commands"], type="list", elements="str"),
@@ -295,6 +309,7 @@ def main():
         save_when=dict(choices=["always", "never", "modified", "changed"], default="never"),
         diff_against=dict(choices=["startup", "intended", "running"]),
         diff_ignore_lines=dict(type="list", elements="str"),
+        commit_timer=dict(type="int", default=0),
     )
 
     mutually_exclusive = [("lines", "src")]
@@ -324,6 +339,10 @@ def main():
         config = NetworkConfig(contents=contents)
         if module.params["backup"]:
             result["__backup__"] = contents
+            if module.params["backup_options"]:
+                if module.params["backup_options"]["append_eof"]:
+                    if not contents.endswith("\neof"):
+                        result["__backup__"] += "\neof"
 
     if any((module.params["src"], module.params["lines"])):
         match = module.params["match"]
@@ -352,7 +371,10 @@ def main():
             # them with the current running config
             if not module.check_mode:
                 if commands:
-                    load_config(module, commands, commit=True)
+                    commit_timer = (
+                        module.params["commit_timer"] if module.params["commit_timer"] > 0 else None
+                    )
+                    load_config(module, commands, commit=True, commit_timer=commit_timer)
             result["changed"] = True
 
     running_config = module.params["running_config"]

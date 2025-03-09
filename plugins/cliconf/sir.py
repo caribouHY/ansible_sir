@@ -112,13 +112,13 @@ class Cliconf(CliconfBase):
         return {
             "format": ["text"],
             "diff_match": ["line", "none"],
-            "diff_replace": ["line", "block"],
+            "diff_replace": [],
             "output": [],
         }
 
     def get_device_operations(self):
         return {
-            "supports_diff_replace": True,
+            "supports_diff_replace": False,
             "supports_commit": True,
             "supports_rollback": False,
             "supports_defaults": True,
@@ -134,10 +134,16 @@ class Cliconf(CliconfBase):
     def get_defaults_flag(self):
         return "all"
 
-    def commit(self, comment=None):
+    def commit(self, comment=None, commit_timer=None):
+        command = "commit"
+
         if comment:
             raise ValueError("commit coment is not supported")
-        self.send_command("commit")
+
+        if commit_timer:
+            command += f" try time {commit_timer}m"
+
+        self.send_command(command)
 
     def discard_changes(self):
         self.send_command("discard")
@@ -172,7 +178,7 @@ class Cliconf(CliconfBase):
         diff_match="line",
         diff_ignore_lines=None,
         path=None,
-        diff_replace="line",
+        diff_replace=None,
     ):
         diff = {}
         device_operations = self.get_device_operations()
@@ -187,11 +193,11 @@ class Cliconf(CliconfBase):
                 % (diff_match, ", ".join(option_values["diff_match"])),
             )
 
-        if diff_replace not in option_values["diff_replace"]:
-            raise ValueError(
-                "'replace' value %s in invalid, valid values are %s"
-                % (diff_replace, ", ".join(option_values["diff_replace"])),
-            )
+        if diff_replace is not None:
+            raise ValueError("'replace' in diff is not supported")
+
+        if diff_ignore_lines is not None:
+            raise ValueError("'diff_ignore_lines' in diff is not supported")
 
         # prepare candidate configuration
         if len(candidate) > 0:
@@ -217,7 +223,9 @@ class Cliconf(CliconfBase):
         return diff
 
     @enable_mode
-    def edit_config(self, candidate=None, commit=True, replace=None, comment=None):
+    def edit_config(
+        self, candidate=None, commit=True, replace=None, diff=False, comment=None, commit_timer=None
+    ):
         resp = {}
         operations = self.get_device_operations()
         self.check_edit_config_capability(operations, candidate, commit, replace, comment)
@@ -236,7 +244,7 @@ class Cliconf(CliconfBase):
                 requests.append(cmd)
         if commit:
             try:
-                self.commit()
+                self.commit(commit_timer=commit_timer)
             except AnsibleConnectionFailure as e:
                 msg = "commit failed: %s" % e.message
                 self.discard_changes()

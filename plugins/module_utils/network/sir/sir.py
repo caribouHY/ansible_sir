@@ -98,11 +98,11 @@ def run_commands(module, commands, check_rc=True):
         module.fail_json(msg=to_text(exc))
 
 
-def load_config(module, commands, commit=False):
+def load_config(module, commands, commit=False, commit_timer=None):
     connection = get_connection(module)
 
     try:
-        resp = connection.edit_config(candidate=commands, commit=commit)
+        resp = connection.edit_config(candidate=commands, commit=commit, commit_timer=commit_timer)
         return resp.get("response")
     except ConnectionError as exc:
         module.fail_json(msg=to_text(exc))

@@ -4,6 +4,15 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
+v1.2.0
+======
+
+Minor Changes
+-------------
+
+- sir_config - Add support for append `eof` to the end of backup configuration.
+- sir_config - Add support for `commit try` command.
+
 v1.1.0
 ======
 
