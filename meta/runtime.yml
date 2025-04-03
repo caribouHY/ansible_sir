@@ -1,13 +1,6 @@
 ---
 requires_ansible: ">=2.17.6"
 plugin_routing:
-  action:
-    sir_command:
-      redirect: caribouhy.sir.command
-    sir_config:
-      redirect: caribouhy.sir.config
-    sir_ping:
-      redirect: caribouhy.sir.ping
   modules:
     command:
       redirect: caribouhy.sir.sir_command
