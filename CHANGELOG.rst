@@ -4,6 +4,15 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
+v1.2.1
+======
+
+Bugfixes
+--------
+
+- Fix action module routing.
+
+
 v1.2.0
 ======
 
