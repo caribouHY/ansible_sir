@@ -4,6 +4,14 @@ Si-R Collection Release Notes
 
 .. contents:: Topics
 
+v1.2.2
+======
+
+Minor Changes
+-------------
+
+- terminal - Do not change terminal column
+
 v1.2.1
 ======
 
