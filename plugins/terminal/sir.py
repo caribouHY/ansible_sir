@@ -46,7 +46,6 @@ class TerminalModule(TerminalBase):
         try:
             self._exec_cli_command(b"terminal timestamp disable")
             self._exec_cli_command(b"terminal pager disable")
-            self._exec_cli_command(b"terminal window column 512")
         except AnsibleConnectionFailure:
             raise AnsibleConnectionFailure("unable to set terminal parameters")
 
